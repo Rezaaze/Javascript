@@ -13,7 +13,21 @@ function createTile(count, k) {
     const newImg = document.createElement('IMG');
     newImg.src = "./images/" + k.species.toLowerCase() + ".png";
     const newP = document.createElement('P');
-    newP.innerText = `${k.fact}`
+    // crating a random number between 0 and 2 for selecting random fact
+    const randomNr = Math.floor(Math.random()*3);
+    console.log(randomNr)
+    // choosing a random fact for the dinos and appending it to the p element
+    if(Object.hasOwn(k,'fact1') && randomNr >= 1){
+        
+        const newFact = "fact"+randomNr
+        console.log(k[newFact])
+        newP.innerText = k[newFact]
+    }else{
+        newP.innerText = `${k.fact}`
+    }
+
+
+    // appending all element createt to the DOM
     newDiv.appendChild(h1)
     newDiv.appendChild(newImg)
     newDiv.appendChild(newP)
@@ -26,15 +40,21 @@ function createTile(count, k) {
 
 const comb1 = function (obj, arr) {
     let count = 0;
-
+    
     for (let dino of arr) {
+        let tallOrSmall = "taller"
         const heightInCm = dino.height * 2.54
+        let diff = heightInCm - obj.height;
         if (obj.height > heightInCm) {
             count++
-        }
+            tallOrSmall = "smaller"
+            diff = obj.height - heightInCm;
+                  
     }
-
-    return `You are taller than ${count} Dinosaurs listed here`
+    dino.fact1 = `The ${dino.species} is ${diff} cm ${tallOrSmall} than you` 
+    
+}
+return `You are taller than ${count} Dinosaurs listed here` 
 }
 
 // Create Dino Compare Method 2
@@ -44,10 +64,15 @@ const comb2 = function (obj, arr) {
     let count = 0;
 
     for (let dino of arr) {
+        let heavierOrLighter = "heavier"
         const weightInKg = dino.weight * 0.453592;
+        let diff = Math.round(weightInKg - obj.height);
         if (obj.weight > weightInKg) {
             count++
+            heavierOrLighter = "lighter"
+            diff = Math.round(obj.height - weightInKg);
         }
+        dino.fact2 = `The ${dino.species} is ${diff} kg ${heavierOrLighter} than you`
     }
 
     return `You are heavier than ${count} Dinosaurs listed here`
@@ -60,7 +85,7 @@ const comb3 = function (obj, arr) {
     let count = 0;
 
     for (let dino of arr) {
-
+        let haveSameDiet = "not"
         if (obj.diet === dino.diet) {
             count++
         }
@@ -150,7 +175,7 @@ document.getElementById('btn').addEventListener('click', e => {
     const diet = document.getElementById('diet').value.toLowerCase();
 
     //assigning the values to the human object
-    Object.assign(human, { species, height, weight, diet })
+    Object.assign(human, { species:'Human', height, weight, diet })
     human.fact = dinoArray[0].compareHeight(human, dinoArray) + ' \n ' + dinoArray[0].compareDiet(human, dinoArray) + '\n' + dinoArray[0].compareWeight(human, dinoArray)
 
 
@@ -167,19 +192,6 @@ document.getElementById('btn').addEventListener('click', e => {
     }
     //creating the human tile 
     createTile(4, human)
-
+    console.log(dinoArray)
 })
-
-
-console.log(human)
-
-
-
-
-
-
-
-
-
-
 
